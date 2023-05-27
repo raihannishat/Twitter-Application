@@ -1,0 +1,299 @@
+<div class="flex top-20 flex-col flex-auto min-w-0">
+
+  <!-- Main -->
+  <div class="flex flex-auto justify-center w-full max-w-5xl mx-auto p-6 sm:p-8">
+    <!-- Column -->
+    <div class="hidden lg:flex flex-col items-start mr-8">
+
+    </div>
+
+    <!-- Column -->
+    <div class="flex flex-col items-start" *ngIf="!isSingleTweetPage">
+      <!-- Create Post -->
+      <fuse-card class="flex top-20 flex-col max-w-140 w-full p-6 sm:p-8 pb-6">
+        <div class="text-xl font-semibold">Create Post</div>
+        <div class="flex flex-col sm:flex-row items-start mt-8">
+          <div class="flex items-center mb-6 sm:mb-0">
+            <img *ngIf="userData?.image" class="w-12 min-w-12 h-12 rounded-full mr-4" src="{{userData.image}}"
+              alt="Card cover image" />
+            <ngx-avatar *ngIf="!userData?.image" [name]="userData?.name" matTooltip="{{ userData?.name }}"
+              matTooltipPosition="below" size="48" matTooltipPosition="below" initialsSize="2"
+              class="border-radius-8 mr-4">
+            </ngx-avatar>
+          </div>
+          <mat-form-field class="fuse-mat-textarea fuse-mat-no-subscript w-full">
+            <textarea matInput [placeholder]="'What\'s on your mind?'" [formControl]="tweetForm" [rows]="3"
+              matTextareaAutosize></textarea>
+          </mat-form-field>
+        </div>
+        <div class="flex items-center mt-6 sm:mt-8 -mx-3">
+          <button class="px-3 mr-1" mat-button>
+            <mat-icon class="icon-size-5 mr-2" [svgIcon]="'heroicons_solid:photograph'"></mat-icon>
+            <span>Photo / Video</span>
+          </button>
+          <button class="px-3 mr-1 hidden sm:inline-flex" mat-button>
+            <mat-icon class="icon-size-5 mr-2" [svgIcon]="'heroicons_solid:user-circle'"></mat-icon>
+            <span>Tag Friends</span>
+          </button>
+          <button class="px-3 mr-1 hidden sm:inline-flex" mat-button>
+            <mat-icon class="icon-size-5 mr-2" [svgIcon]="'heroicons_solid:emoji-happy'"></mat-icon>
+            <span>Feeling</span>
+          </button>
+          <button [disabled]="tweetForm.invalid" class="px-8 mr-1 hidden sm:inline-flex bg-sky-400" mat-stroked-button
+            (click)="postTweet()">
+            <!-- <mat-icon class="icon-size-5 mr-2" [svgIcon]="'feather:send'"></mat-icon> -->
+            <span>Tweet</span>
+          </button>
+          <!-- <button class="px-3" mat-button [matMenuTriggerFor]="postCardMenu01">
+                    <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:dots-horizontal'"></mat-icon>
+                  </button>
+                  <mat-menu #postCardMenu01="matMenu">
+                    <button class="sm:hidden" mat-menu-item>
+                      <span class="flex items-center">
+                        <mat-icon class="icon-size-5 mr-3" [svgIcon]="'heroicons_solid:user-circle'"></mat-icon>
+                        <span>Tag Friends</span>
+                      </span>
+                    </button>
+                    <button class="sm:hidden" mat-menu-item>
+                      <span class="flex items-center">
+                        <mat-icon class="icon-size-5 mr-3" [svgIcon]="'heroicons_solid:emoji-happy'"></mat-icon>
+                        <span>Feeling</span>
+                      </span>
+                    </button>
+                    <button mat-menu-item>
+                      <span class="flex items-center">
+                        <mat-icon class="icon-size-5 mr-3" [svgIcon]="'heroicons_solid:play'"></mat-icon>
+                        <span>Live</span>
+                      </span>
+                    </button>
+                    <button mat-menu-item>
+                      <span class="flex items-center">
+                        <mat-icon class="icon-size-5 mr-3" [svgIcon]="'heroicons_solid:sparkles'"></mat-icon>
+                        <span>Gif</span>
+                      </span>
+                    </button>
+                    <button mat-menu-item>
+                      <span class="flex items-center">
+                        <mat-icon class="icon-size-5 mr-3" [svgIcon]="
+                                              'heroicons_solid:location-marker'
+                                          "></mat-icon>
+                        <span>Check in</span>
+                      </span>
+                    </button>
+                  </mat-menu> -->
+        </div>
+      </fuse-card>
+      <!-- Post 1 -->
+      <div>
+        <ul infinite-scroll [infiniteScrollDistance]="2" infinite-scroll-disabled="infiniteScrollStatus"
+          (scrolled)="onScroll()">
+
+          <li *ngFor="let tweet of tweetVMlist">
+            <fuse-card style="width: 560px !important;" class="flex top-20 flex-col w-560 max-w-140 w-full mt-8"
+              #expandableCard02="fuseCard">
+              <div class="flex items-center mx-6 sm:mx-8 mt-6 mb-4">
+                <img *ngIf="tweet?.image" class="w-10 h-10 rounded-full mr-4" src="{{tweet.image}}"
+                  alt="Card cover image" (click)="onRedirectToProfile(tweet.userId)" />
+                <ngx-avatar *ngIf="!tweet.image" [name]="tweet?.userName" matTooltip="{{ tweet?.userName }}"
+                  matTooltipPosition="below" size="42" matTooltipPosition="below" initialsSize="2"
+                  class="border-radius-8 mr-4" (click)="onRedirectToProfile(tweet.userId)">
+                </ngx-avatar>
+                <div class="flex flex-col" (click)="onRedirectToProfile(tweet.userId)">
+                  <span class="font-semibold leading-none">{{tweet.userName}}</span>
+                  <span class="text-sm text-secondary leading-none mt-1">{{tweet.createdAt | dateAgo}}</span>
+                </div>
+                <button *ngIf="tweet?.canDelete" class="ml-auto -mr-4" mat-icon-button
+                  [matMenuTriggerFor]="postCardMenu02">
+                  <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:dots-vertical'"></mat-icon>
+                </button>
+                <mat-menu #postCardMenu02="matMenu">
+                  <button mat-menu-item>
+                    <span class="flex items-center">
+                      <mat-icon class="icon-size-5 mr-3" [svgIcon]="'mat_solid:delete'"></mat-icon>
+                      <span>Delete</span>
+                    </span>
+                  </button>
+                </mat-menu>
+              </div>
+              <div class="mx-6 sm:mx-8 mt-2 mb-6">
+                {{tweet.content}}
+              </div>
+              <div class="flex items-center mx-3 mb-4 sm:mx-5">
+                <button class="px-3 mr-1" mat-button (click)="likeChange(tweet)">
+                  <mat-icon [class.likeColor]="tweet?.isLikedByCurrentUser" class="icon-size-5 text-white-500 mr-2"
+                    [svgIcon]="'heroicons_solid:heart'"></mat-icon>
+                  <span>{{(tweet?.likes)}}</span>
+                </button>
+                <button class="px-3 mr-1" mat-button (click)="getComments(tweet)">
+                  <mat-icon class="icon-size-5 mr-2" [svgIcon]="'heroicons_solid:chat-alt'"></mat-icon>
+                  <span>{{(tweet?.comments)}}</span>
+                </button>
+                <button (click)="retweetChange(tweet)" class="px-3 mr-1" mat-button>
+                  <mat-icon [class.retweetColor]="tweet?.isRetweetedByCurrentUser" class="icon-size-5 mr-2"
+                    [svgIcon]="'mat_outline:ios_share'"></mat-icon>
+                  <span>{{(tweet?.retweets)}}</span>
+                </button>
+              </div>
+              <ng-container>
+                <div *ngIf="postId === tweet?.id" [ngClass]="CommentOpen? 'display-block': 'display-none'">
+                  <hr class="border-b m-0" />
+                  <div class="flex flex-col mx-4 sm:mx-8 mt-6 mb-3">
+                    <div class="flex items-start">
+                      <img *ngIf="userData?.image" class="w-12 h-12 rounded-full mr-5" src="{{userData.image}}"
+                        alt="Card cover image" />
+                      <ngx-avatar *ngIf="!userData.image" [name]="userData?.name" matTooltip="{{ userData?.name }}"
+                        matTooltipPosition="below" size="44" matTooltipPosition="below" initialsSize="2"
+                        class="border-radius-8 mr-4" (click)="onRedirectToProfile(userData.id)">
+                      </ngx-avatar>
+                      <mat-form-field class="fuse-mat-textarea fuse-mat-no-subscript w-full">
+                        <textarea [formControl]="commentForm" matInput [placeholder]="'Write a comment...'" [rows]="3"
+                          matTextareaAutosize></textarea>
+                      </mat-form-field>
+                    </div>
+                    <div class="flex items-center mt-3 ml-auto -mr-3">
+                      <button [disabled]="commentForm.invalid" (click)="createComment(tweet)" mat-flat-button
+                        [color]="'primary'">Comment</button>
+                    </div>
+                  </div>
+                  <hr class="border-b mx-4 sm:mx-8 my-0" />
+                  <div class="max-h-120 overflow-y-auto">
+                    <div *ngFor="let comment of commentVMList" class="relative flex flex-col mx-4 sm:mx-8 my-6">
+                      <div class="flex items-start">
+                        <img *ngIf="comment.image" class="w-8 h-8 rounded-full mr-4" src="{{comment.image}}"
+                          alt="Card cover image" />
+                        <ngx-avatar *ngIf="!comment.image" [name]="comment.userName"
+                          matTooltip="{{ comment?.userName }}" matTooltipPosition="below" size="36"
+                          matTooltipPosition="below" initialsSize="2" class="border-radius-8 mr-4"
+                          (click)="onRedirectToProfile(comment.userId)">
+                        </ngx-avatar>
+                        <div class="flex flex-col mt-0.5">
+                          <span style="word-break: break-all" (click)="onRedirectToProfile(comment.userId)">
+                            <b>{{comment?.userName}} </b> {{comment?.content}}
+                          </span>
+                          <div class="flex items-center text-sm text-secondary mt-2">
+                            <span *ngIf="comment?.canDelete" (click)="deleteComment(tweet,comment)"
+                              class="mr-2 cursor-pointer hover:underline">Delete</span>
+                            <span class="mr-2">&bull;</span>
+                            <span>{{comment?.createdTime | dateAgo}}</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <button (click)="viewMoreComment(tweet)" class="mb-6 ml-10 text-gray-700 font-bold text-lg"
+                    *ngIf="tweet.comments>commentVMList.length">load more</button>
+                </div>
+              </ng-container>
+            </fuse-card>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+
+    <div class="flex flex-col items-start" *ngIf="isSingleTweetPage">
+      <div>
+        <ul>
+          <li *ngFor="let tweet of tweetVMlist">
+            <fuse-card style="width: 560px !important;" class="flex top-20 flex-col w-560 max-w-140 w-full "
+              #expandableCard02="fuseCard">
+              <div class="flex items-center mx-6 sm:mx-8 mt-6 mb-4">
+                <img *ngIf="tweet?.image" class="w-10 h-10 rounded-full mr-4" src="{{tweet.image}}"
+                  alt="Card cover image" (click)="onRedirectToProfile(tweet.userId)" />
+                <ngx-avatar *ngIf="!tweet.image" [name]="tweet?.userName" matTooltip="{{ tweet?.userName }}"
+                  matTooltipPosition="below" size="42" matTooltipPosition="below" initialsSize="2"
+                  class="border-radius-8 mr-4" (click)="onRedirectToProfile(tweet.userId)">
+                </ngx-avatar>
+                <div class="flex flex-col" (click)="onRedirectToProfile(tweet.userId)">
+                  <span class="font-semibold leading-none">{{tweet.userName}}</span>
+                  <span class="text-sm text-secondary leading-none mt-1">{{tweet.createdAt | dateAgo}}</span>
+                </div>
+                <button *ngIf="tweet?.canDelete" class="ml-auto -mr-4" mat-icon-button
+                  [matMenuTriggerFor]="postCardMenu02">
+                  <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:dots-vertical'"></mat-icon>
+                </button>
+                <mat-menu #postCardMenu02="matMenu">
+                  <button mat-menu-item>
+                    <span class="flex items-center">
+                      <mat-icon class="icon-size-5 mr-3" [svgIcon]="'mat_solid:delete'"></mat-icon>
+                      <span>Delete</span>
+                    </span>
+                  </button>
+                </mat-menu>
+              </div>
+              <div class="mx-6 sm:mx-8 mt-2 mb-6">
+                {{tweet.content}}
+              </div>
+              <div class="flex items-center mx-3 mb-4 sm:mx-5">
+                <button class="px-3 mr-1" mat-button (click)="likeChange(tweet)">
+                  <mat-icon [class.likeColor]="tweet?.isLikedByCurrentUser" class="icon-size-5 text-white-500 mr-2"
+                    [svgIcon]="'heroicons_solid:heart'"></mat-icon>
+                  <span>{{(tweet?.likes)}}</span>
+                </button>
+                <button class="px-3 mr-1" mat-button (click)="getComments(tweet)">
+                  <mat-icon class="icon-size-5 mr-2" [svgIcon]="'heroicons_solid:chat-alt'"></mat-icon>
+                  <span>{{(tweet?.comments)}}</span>
+                </button>
+                <button (click)="retweetChange(tweet)" class="px-3 mr-1" mat-button>
+                  <mat-icon [class.retweetColor]="tweet?.isRetweetedByCurrentUser" class="icon-size-5 mr-2"
+                    [svgIcon]="'mat_outline:ios_share'"></mat-icon>
+                  <span>{{(tweet?.retweets)}}</span>
+                </button>
+              </div>
+              <ng-container>
+                <div *ngIf="postId === tweet?.id" [ngClass]="CommentOpen? 'display-block': 'display-none'">
+                  <hr class="border-b m-0" />
+                  <div class="flex flex-col mx-4 sm:mx-8 mt-6 mb-3">
+                    <div class="flex items-start">
+                      <img *ngIf="userData?.image" class="w-12 h-12 rounded-full mr-5" src="{{userData.image}}"
+                        alt="Card cover image" />
+                      <ngx-avatar *ngIf="!userData?.image" [name]="userData?.name" matTooltip="{{ userData?.name }}"
+                        matTooltipPosition="below" size="44" matTooltipPosition="below" initialsSize="2"
+                        class="border-radius-8 mr-4" (click)="onRedirectToProfile(userData.id)">
+                      </ngx-avatar>
+                      <mat-form-field class="fuse-mat-textarea fuse-mat-no-subscript w-full">
+                        <textarea [formControl]="commentForm" matInput [placeholder]="'Write a comment...'" [rows]="3"
+                          matTextareaAutosize></textarea>
+                      </mat-form-field>
+                    </div>
+                    <div class="flex items-center mt-3 ml-auto -mr-3">
+                      <button [disabled]="commentForm.invalid" (click)="createComment(tweet)" mat-flat-button
+                        [color]="'primary'">Comment</button>
+                    </div>
+                  </div>
+                  <hr class="border-b mx-4 sm:mx-8 my-0" />
+                  <div class="max-h-120 overflow-y-auto">
+                    <div *ngFor="let comment of commentVMList" class="relative flex flex-col mx-4 sm:mx-8 my-6">
+                      <div class="flex items-start">
+                        <img *ngIf="comment.image" class="w-8 h-8 rounded-full mr-4" src="{{comment.image}}"
+                          alt="Card cover image" />
+                        <ngx-avatar *ngIf="!comment.image" [name]="comment.userName"
+                          matTooltip="{{ comment?.userName }}" matTooltipPosition="below" size="36"
+                          matTooltipPosition="below" initialsSize="2" class="border-radius-8 mr-4"
+                          (click)="onRedirectToProfile(comment.userId)">
+                        </ngx-avatar>
+                        <div class="flex flex-col mt-0.5">
+                          <span style="word-break: break-all" (click)="onRedirectToProfile(comment.userId)">
+                            <b>{{comment?.userName}} </b> {{comment?.content}}
+                          </span>
+                          <div class="flex items-center text-sm text-secondary mt-2">
+                            <span *ngIf="comment?.canDelete" (click)="deleteComment(tweet,comment)"
+                              class="mr-2 cursor-pointer hover:underline">Delete</span>
+                            <span class="mr-2">&bull;</span>
+                            <span>{{comment?.createdTime | dateAgo}}</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <button (click)="viewMoreComment(tweet)" class="mb-6 ml-10 text-gray-700 font-bold text-lg"
+                    *ngIf="tweet.comments>commentVMList.length">load more</button>
+                </div>
+              </ng-container>
+            </fuse-card>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,4 @@
+﻿[*.cs]
+
+# MABuilders2001: Not supported builders expression
+dotnet_diagnostic.MABuilders2001.severity = warning

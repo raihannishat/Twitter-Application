@@ -1,0 +1,73 @@
+<div class="flex top-20 flex-col flex-auto min-w-0">
+    <div class="flex flex-row flex-auto justify-between py-8 px-6 md:px-8 border-b">
+
+        <!-- Title -->
+        <div>
+            <div class="text-4xl font-extrabold tracking-tight leading-none mt-4">All User</div>
+        </div>
+
+        <!-- Main actions -->
+        <div class="flex items-center mt-4 sm:mt-0 md:mt-4">
+            <button style="background-color: darkgrey" class="ml-4" mat-flat-button (click)="logout()">
+                <span class="ml-2 mr-1">Logout</span>
+                <mat-icon [svgIcon]="'heroicons_outline:logout'"></mat-icon>
+            </button>
+        </div>
+    </div>
+    <!-- Main -->
+    <div class="flex flex-auto justify-center w-full max-w-5xl mx-auto p-6 sm:p-8">
+
+        <!-- Column -->
+        <div class="flex flex-col items-start">
+
+            <div
+                class="fixed top- inset-0 sm:static ml-4 sm:inset-auto flex flex-col lg:min-w-48 lg:w-150 sm:rounded-2xl overflow-hidden shadow-lg">
+                <ul infinite-scroll [infiniteScrollDistance]="2" (scrolled)="onScroll()">
+
+                    <li *ngFor="let contact of contacts | async ; let i = index; trackBy: trackByFn">
+                        <a class="z-20 flex items-center px-6 py-4 md:px-8 cursor-pointer border-b"
+                            [ngClass]="{'hover:bg-gray-100 dark:hover:bg-hover': !selectedContact || selectedContact.id !== contact.id,
+                                        'bg-primary-50 dark:bg-hover': selectedContact && selectedContact.id === contact.id}">
+                            <div class="flex flex-0 items-center justify-center w-10 h-10 rounded-full overflow-hidden">
+                                <ng-container *ngIf="contact.avatar">
+                                    <img class="object-cover w-full h-full" [src]="contact.avatar"
+                                        alt="Contact avatar" />
+                                </ng-container>
+                                <ng-container *ngIf="!contact.avatar">
+                                    <div
+                                        class="flex items-center justify-center w-full h-full rounded-full text-lg uppercase bg-gray-200 text-gray-600 dark:bg-gray-700 dark:text-gray-200">
+                                        {{contact.name.charAt(0)}}
+                                    </div>
+                                </ng-container>
+                            </div>
+                            <div fxLayout="row">
+
+                            </div>
+                            <div class="min-w-50 ml-4">
+                                <div class="font-medium leading-5 truncate">{{contact.name}}</div>
+                                <!--                                        <div class="leading-5 truncate text-secondary">{{contact.title}}</div>-->
+                            </div>
+                            <div class="min-w-50 ml-4 mr-8">
+                                <button *ngIf="!contact.isBlockedByAdmin" name="block" ngDefaultControl
+                                    [(ngModel)]="contact.isBlockedByAdmin" (click)="blockUser(contact.id);" class="mr-4"
+                                    mat-flat-button style="background-color: indianred; color: #FFFFFF">Block</button>
+
+                                <button *ngIf="contact.isBlockedByAdmin" name="unblock" ngDefaultControl
+                                    [(ngModel)]="contact.isBlockedByAdmin" (click)="blockUser(contact.id);" class="mr-4"
+                                    mat-flat-button style="background-color: indianred; color: #FFFFFF">Unblock</button>
+                                <!-- <button style="background-color: #22D3EE" (click)="editUser(contact.id)"
+                                    mat-flat-button>
+                                    <mat-icon
+                                        class="icon-size-5"
+                                        [svgIcon]="'heroicons_solid:pencil-alt'"></mat-icon>
+                                    <span class="ml-2">Edit</span>
+                                </button> -->
+                            </div>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+    </div>
+</div>

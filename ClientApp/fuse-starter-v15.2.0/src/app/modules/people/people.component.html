@@ -1,0 +1,144 @@
+<div class="flex top-20 flex-col flex-auto min-w-0">
+
+    <!-- Main -->
+    <div class="flex flex-auto justify-center w-full max-w-5xl mx-auto p-6 sm:p-8">
+
+        <!-- Column -->
+        <div class="flex flex-col items-start">
+
+            <div style="width: 560px !important;"
+                class="fixed top- inset-0 sm:static ml-4 sm:inset-auto flex flex-col lg:min-w-48 lg:w-150 sm:rounded-2xl overflow-hidden shadow-lg">
+                <ul infinite-scroll [infiniteScrollDistance]="2" infinite-scroll-disabled="infiniteScrollStatus"
+                    (scrolled)="onScroll()">
+
+                    <li>
+                        <div class="relative flex flex-col flex-auto divide-y overflow-y-auto bg-card">
+                            <div class="flex-auto border-t -mt-px pt-4 sm:pt-6">
+                                <div class="w-full mx-auto">
+                                    <!-- Tabs -->
+                                    <mat-tab-group class="sm:px-2" [animationDuration]="'0'"
+                                        [selectedIndex]="followerTab">
+
+                                        <!-- Home -->
+                                        <mat-tab label="Follower">
+                                            <ng-template matTabContent>
+                                                <div class="grid gap-6 w-full min-w-0">
+                                                    <ng-container>
+                                                        <div
+                                                            class="relative flex flex-col flex-auto divide-y overflow-y-auto bg-card">
+                                                            <div class="mt-4">
+                                                                <div class="list-container">
+                                                                    <div *ngFor="let follow of followerList"
+                                                                        class="list-items flex flex-col sm:flex-row items-center justify-between max-w-lg mx-auto border-b py-4 dark:bg-gray-700 rounded-md my-1 px-4"
+                                                                        role="button">
+                                                                        <div style="cursor: pointer"
+                                                                            (click)="onRedirectToProfile(follow)"
+                                                                            class="flex flex-row items-center space-x-4">
+                                                                            <img *ngIf="follow?.image"
+                                                                                src="{{follow.image}}" alt="default img"
+                                                                                class="h-12 w-12 rounded-full" />
+                                                                            <ngx-avatar *ngIf="!follow.image"
+                                                                                [name]="follow?.name"
+                                                                                matTooltip="{{ follow?.name }}"
+                                                                                matTooltipPosition="below" size="48"
+                                                                                matTooltipPosition="below"
+                                                                                initialsSize="2"
+                                                                                class="border-radius-8 mr-0">
+                                                                            </ngx-avatar>
+
+                                                                            <div>
+                                                                                <h1
+                                                                                    class="tracking-tight dark:text-gray-100">
+                                                                                    {{follow.name}}</h1>
+                                                                            </div>
+                                                                        </div>
+                                                                        <!-- <div *ngIf="!follow?.isCurrentUser">
+                                                                            <button
+                                                                                (click)="onRedirectToProfile(follow)"
+                                                                                mat-flat-button
+                                                                                *ngIf="!follow?.isFollowing"
+                                                                                color="primary"
+                                                                                class="mr-2">Follow</button>
+                                                                            <button
+                                                                                (click)="onRedirectToProfile(follow)"
+                                                                                mat-flat-button
+                                                                                *ngIf="follow?.isFollowing"
+                                                                                style="border: 1px solid black"
+                                                                                class="mr-2 text-white bg-gray-700 border-current">Unfollow</button>
+                                                                        </div> -->
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </ng-container>
+                                                </div>
+                                            </ng-template>
+                                        </mat-tab>
+
+                                        <!-- Team -->
+                                        <mat-tab label="Following">
+                                            <ng-template matTabContent>
+                                                <div class="grid gap-6 w-full min-w-0">
+                                                    <ng-container>
+                                                        <div
+                                                            class="relative flex flex-col flex-auto divide-y overflow-y-auto bg-card">
+                                                            <div class="mt-4">
+                                                                <div class="list-container">
+                                                                    <div *ngFor="let follow of followingList"
+                                                                        class="list-items flex flex-col sm:flex-row items-center justify-between max-w-lg mx-auto border-b py-4 dark:bg-gray-700 rounded-md my-1 px-4"
+                                                                        role="button">
+                                                                        <div style="cursor: pointer"
+                                                                            (click)="onRedirectToProfile(follow)"
+                                                                            class="flex flex-row items-center space-x-4">
+                                                                            <img *ngIf="follow?.image"
+                                                                                src="{{follow?.image}}"
+                                                                                alt="default img"
+                                                                                class="h-12 w-12 rounded-full" />
+                                                                            <ngx-avatar *ngIf="!follow.image"
+                                                                                [name]="follow?.name"
+                                                                                matTooltip="{{ follow?.name }}"
+                                                                                matTooltipPosition="below" size="48"
+                                                                                matTooltipPosition="below"
+                                                                                initialsSize="2"
+                                                                                class="border-radius-8 mr-0">
+                                                                            </ngx-avatar>
+                                                                            <div>
+                                                                                <h1
+                                                                                    class="tracking-tight dark:text-gray-100">
+                                                                                    {{follow.name}}</h1>
+                                                                            </div>
+                                                                        </div>
+                                                                        <!-- <div *ngIf="!follow?.isCurrentUser">
+                                                                            <button
+                                                                                (click)="onRedirectToProfileFollowing(follow)"
+                                                                                mat-flat-button
+                                                                                *ngIf="!follow?.isFollowing"
+                                                                                color="primary"
+                                                                                class="mr-2">Follow</button>
+                                                                            <button
+                                                                                (click)="onRedirectToProfileFollowing(follow)"
+                                                                                mat-flat-button
+                                                                                *ngIf="follow?.isFollowing"
+                                                                                style="border: 1px solid black"
+                                                                                class="mr-2 text-white bg-gray-700 border-current">Unfollow</button>
+                                                                        </div> -->
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </ng-container>
+                                                </div>
+                                            </ng-template>
+                                        </mat-tab>
+
+                                    </mat-tab-group>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+    </div>
+</div>

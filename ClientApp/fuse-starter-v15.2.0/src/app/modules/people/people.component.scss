@@ -1,0 +1,16 @@
+::ng-deep {
+    app-notifications{
+        top: 80px !important;
+    }
+
+    fuse-card{
+        display: none !important;
+    }
+
+}
+
+:host app-sidebar[specificityattr] ::ng-deep app-sidebar {
+    background: red;
+}
+
+

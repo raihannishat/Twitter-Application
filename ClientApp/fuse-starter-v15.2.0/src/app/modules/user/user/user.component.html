@@ -1,0 +1,51 @@
+<div class="flex top-20 flex-col flex-auto min-w-0">
+
+    <!-- Main -->
+    <div class="flex flex-auto justify-center w-full max-w-5xl mx-auto p-6 sm:p-8">
+
+        <!-- Column -->
+        <div class="flex flex-col items-start">
+            <div class="lg:flex flex-col items-start ml-8 mt-8 top-20 w-full">
+                <!-- About me -->
+                <fuse-card style="width: 490px!important; " class="top-10 flex flex-col p-8">
+                    <div class="text-2xl font-semibold leading-tight">Suggested User</div>
+                    <div class="mt-4">
+                        <div class="flex flex-col mt-5">
+                            <ul infinite-scroll [infiniteScrollDistance]="2" (scrolled)="onScroll()">
+                                <li *ngFor="let user of users">
+                                    <div class="grid gap-4 grid-cols-2" fxLayout="column"
+                                        class="flex mb-8 ql-align-center gap-8">
+                                        <div class="flex-row flex" style="width: 50%"
+                                            (click)="onRedirectToProfile(user.id)">
+                                            <img *ngIf="user?.image" src="{{user?.image}}" alt="default img"
+                                                class="h-11 w-11 rounded-full mr-4" />
+                                            <ngx-avatar *ngIf="!user.image" [name]="user?.name"
+                                                matTooltip="{{ user?.name }}" matTooltipPosition="below" size="46"
+                                                matTooltipPosition="below" initialsSize="2"
+                                                class="border-radius-8 mr-4">
+                                            </ngx-avatar>
+                                            <p style="margin-top:12px !important;">
+                                                {{user?.name}}</p>
+                                        </div>
+                                        <div style="width: 50%">
+                                            <button style="width:35x" (click)="follow(user)" mat-flat-button
+                                                *ngIf="!user?.isFollowing" color="primary" class="mr-2">Follow</button>
+                                            <button style="width:35px" (click)="follow(user)" mat-flat-button
+                                                *ngIf="user?.isFollowing" style="border: 1px solid black"
+                                                class="mr-2 text-white bg-gray-700 border-current">Unfollow</button>
+
+                                            <!--                                                            <button mat-flat-button *ngIf="user?.isFollowing" style="border: 1px solid black" class="mr-2 text-white bg-gray-700 border-current">Unfollow</button>-->
+                                            <!--                                                            <button *ngif="!user?.isFollowing" mat-flat-button [color]="'primary'" >Follow</button>-->
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </fuse-card>
+
+            </div>
+
+        </div>
+    </div>
+</div>

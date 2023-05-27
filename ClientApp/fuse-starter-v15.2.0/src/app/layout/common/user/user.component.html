@@ -1,0 +1,23 @@
+<!-- Button -->
+<button mat-icon-button [matMenuTriggerFor]="userActions">
+    <span class="relative">
+        <img *ngIf="image" src="{{image}}" alt="default img" class="h-10 w-12 rounded-full" />
+        <ngx-avatar *ngIf="!image" [name]="userData?.name" matTooltipPosition="below" size="48" initialsSize="2"
+            class="border-radius-8 mr-4">
+        </ngx-avatar>
+
+        <!-- <img class="w-7 h-7 rounded-full" *ngIf="showAvatar && user.avatar && userData?.image" [src]="userData.image"> -->
+        <!-- <ngx-avatar *ngIf="!userData?.image && showAvatar && user.avatar" [name]="userData?.name"
+            [matTooltip]="userData.name" matTooltipPosition="below" size="48" matTooltipPosition="below"
+            initialsSize="2" class="border-radius-8 mr-4">
+        </ngx-avatar> -->
+    </span>
+</button>
+
+<mat-menu [xPosition]="'before'" #userActions="matMenu">
+    <button mat-menu-item (click)="signOut()">
+        <mat-icon [svgIcon]="'heroicons_outline:logout'"></mat-icon>
+        <span>Sign out &nbsp;</span>
+        <span>({{userData?.name}})</span>
+    </button>
+</mat-menu>
